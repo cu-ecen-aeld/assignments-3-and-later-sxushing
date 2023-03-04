@@ -112,13 +112,13 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
 int pid = fork();
 int status;
 int fd = open(outputfile, O_WRONLY|O_TRUNC|O_CREAT, 0644);
-if (fd < 0) { abort(); }
+if (fd < 0) { return false; }
 switch (pid) {
-  case -1: abort();
+  case -1: return false;
   case 0:
-    if (dup2(fd, 1) < 0) {  abort(); }
+    if (dup2(fd, 1) < 0) {  return false; }
     close(fd);
-    execvp(command[0], command);  abort();
+    execvp(command[0], command);  return false;
   default:
     close(fd);
     wait(&status);
